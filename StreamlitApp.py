@@ -23,8 +23,8 @@ def read_file(filename):
     with fs.open(filename) as f:
         return f.read().decode("utf-8")
 
-content = read_file("testbucket-jrieke/mystreamlit/data/full_2016.csv")
-
+content = read_file("mystreamlit/data/full_2016.csv")
+st.dataframe(content)
 # Print results.
 # for line in content.strip().split("\n"):
 #     name, pet = line.split(",")
@@ -377,8 +377,8 @@ def main():
 
     st.write("Done!")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+    # main()
 
 
 
