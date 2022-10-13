@@ -12,6 +12,9 @@ import pydeck as pdk
 import streamlit as st
 from loguru import logger
 
+st.set_page_config(page_title="Mimiric: A tool for ML data", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
+                #    layout='wide',
+                #    initial_sidebar_state='auto')
 # Create connection object.
 # `anon=False` means not anonymous, i.e. it uses access keys to pull data.
 fs = s3fs.S3FileSystem(anon=False)
