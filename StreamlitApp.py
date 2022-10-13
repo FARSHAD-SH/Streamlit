@@ -28,7 +28,8 @@ def read_file(filename):
         return f.read().decode("utf-8")
 
 content = read_file("mystreamlit/data/full_2016.csv")
-# st.dataframe(content)
+st.write('ajabaja')
+st.dataframe(content)
 st.write('Hi')
 # Print results.
 # for line in content.strip().split("\n"):
