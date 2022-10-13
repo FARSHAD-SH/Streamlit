@@ -1,6 +1,7 @@
 # streamlit_app.py
 
 import streamlit as st
+st.set_page_config(page_title="Mimiric: A tool for ML data", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
 import s3fs
 import os
 import altair as alt
@@ -12,7 +13,7 @@ import pydeck as pdk
 import streamlit as st
 from loguru import logger
 
-st.set_page_config(page_title="Mimiric: A tool for ML data", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
+
                 #    layout='wide',
                 #    initial_sidebar_state='auto')
 # Create connection object.
@@ -27,14 +28,15 @@ def read_file(filename):
         return f.read().decode("utf-8")
 
 content = read_file("mystreamlit/data/full_2016.csv")
-st.dataframe(content)
+# st.dataframe(content)
+st.write('Hi')
 # Print results.
 # for line in content.strip().split("\n"):
 #     name, pet = line.split(",")
 #     st.write(f"{name} has a :{pet}:")
 
 # SETTING PAGE CONFIG TO WIDE MODE AND ADDING A TITLE AND FAVICON
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
 def main():
 
