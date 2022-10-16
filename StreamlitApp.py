@@ -2,6 +2,9 @@
 
 import streamlit as st
 st.set_page_config(page_title="Mimiric: A tool for ML data", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
+
+
+
 import s3fs
 import os
 import altair as alt
@@ -12,32 +15,28 @@ import plotly.express as px
 import pydeck as pdk
 import streamlit as st
 from loguru import logger
+from io import StringIO
 
 
-                #    layout='wide',
-                #    initial_sidebar_state='auto')
 # Create connection object.
 # `anon=False` means not anonymous, i.e. it uses access keys to pull data.
 fs = s3fs.S3FileSystem(anon=False)
 
 # Retrieve file contents.
 # Uses st.experimental_memo to only rerun when the query changes or after 10 min.
+logger.info("Loading dataset from file ...")
 @st.experimental_memo(ttl=600)
 def read_file(filename):
     with fs.open(filename) as f:
         return f.read().decode("utf-8")
 
 content = read_file("mystreamlit/data/full_2016.csv")
-st.write('ajabaja')
-st.dataframe(content)
-st.write('Hi')
-# Print results.
-# for line in content.strip().split("\n"):
-#     name, pet = line.split(",")
-#     st.write(f"{name} has a :{pet}:")
 
-# SETTING PAGE CONFIG TO WIDE MODE AND ADDING A TITLE AND FAVICON
-# st.set_page_config(layout="wide")
+content = StringIO(content)
+df = pd.read_csv(content)
+df['code_departement'] = pd.to_numeric(df['code_departement'], errors='coerce', downcast='integer')
+# st.dataframe(df)
+# path = f'./Data/full_{op[0]}.csv'
 
 def main():
 
@@ -46,19 +45,19 @@ def main():
     ####################
 
     # LOAD DATA ONCE
-    logger.info("Loading dataset from file ...")
-    @st.experimental_singleton
-    def load_data(path):
-        raw_data = pd.read_csv(
-            path,
-            usecols=[
-                    "id_mutation", "date_mutation",
-                    "valeur_fonciere", "type_local",
-                    "code_departement", "surface_terrain",
-                    "latitude", "longitude"
-                    ], low_memory=False) # onlread these columns
-        sample_raw_data = raw_data.sample(frac=.1, random_state=1).copy()  # sample 20% of data
-        return sample_raw_data
+    # logger.info("Loading dataset from file ...")
+    # @st.experimental_singleton
+    # def load_data(path):
+    #     raw_data = pd.read_csv(
+    #         path,
+    #         usecols=[
+    #                 "id_mutation", "date_mutation",
+    #                 "valeur_fonciere", "type_local",
+    #                 "code_departement", "surface_terrain",
+    #                 "latitude", "longitude"
+    #                 ], low_memory=False) # onlread these columns
+    #     sample_raw_data = raw_data.sample(frac=.1, random_state=1).copy()  # sample 20% of data
+    #     return sample_raw_data
 
 
     ####################
@@ -318,10 +317,10 @@ def main():
     def Pre_processing(op):
 
         # Get Directory of the data
-        path = f'./Data/full_{op[0]}.csv'
+        # path = f'./Data/full_{op[0]}.csv'
 
         # LOAD DATA
-        raw_data = content #load_data(path)
+        raw_data = df #load_data(path)
 
         # PREPROCESSING
         tr_data = trans_data(raw_data)
@@ -383,8 +382,8 @@ def main():
 
     st.write("Done!")
 
-# if __name__ == "__main__":
-    # main()
+if __name__ == "__main__":
+    main()
 
 
 
