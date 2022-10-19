@@ -6,7 +6,7 @@ st.set_page_config(page_title="Mimiric: A tool for ML data", page_icon=":bar_cha
 
 
 import s3fs
-import os
+# import os
 import altair as alt
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,13 +30,42 @@ def read_file(filename):
     with fs.open(filename) as f:
         return f.read().decode("utf-8")
 
-content = read_file("mystreamlit/data/full_2016.csv")
+content2016 = read_file("mystreamlit/Data/file2016.csv")
+content2016 = StringIO(content2016)
+df2016 = pd.read_csv(content2016)
+content2017 = read_file("mystreamlit/Data/file2017.csv")
+content2017 = StringIO(content2017)
+df2017 = pd.read_csv(content2017)
+content2018 = read_file("mystreamlit/Data/file2018.csv")
+content2018 = StringIO(content2018)
+df2018 = pd.read_csv(content2018)
+content2019 = read_file("mystreamlit/Data/file2019.csv")
+content2019 = StringIO(content2019)
+df2019 = pd.read_csv(content2019)
+content2020 = read_file("mystreamlit/Data/file2020.csv")
+content2020 = StringIO(content2020)
+df2020 = pd.read_csv(content2020)
+# content = read_file("mystreamlit/Data/file2017.csv")
+# content = read_file("mystreamlit/Data/file2018.csv")
+# content = read_file("mystreamlit/Data/file2019.csv")
+# content = read_file("mystreamlit/Data/file2020.csv")
 
-content = StringIO(content)
-df = pd.read_csv(content)
-df['code_departement'] = pd.to_numeric(df['code_departement'], errors='coerce', downcast='integer')
+# content = StringIO(content)
+# df2016 = pd.read_csv(content)
+# df['code_departement'] = pd.to_numeric(df['code_departement'], errors='coerce', downcast='integer')
+# df[type(df['code_departement'])=='float64'] = df['code_departement'].astype('int')
 # st.dataframe(df)
-# path = f'./Data/full_{op[0]}.csv'
+# df1=df['code_departement']
+# df2 = df1[df1.apply(lambda x: isinstance(x, float))]
+# df3 = df1[df1.apply(lambda x: isinstance(x, int))]
+# df4 = df1[df1.apply(lambda x: isinstance(x, str))]
+
+# # df1=df1.astype('int')
+
+# st.write(df2.shape)
+# st.write(df3.shape)
+# st.write(df4.shape)
+# path = f'./Data/file{op[0]}.csv'
 
 def main():
 
@@ -45,6 +74,15 @@ def main():
     ####################
 
     # LOAD DATA ONCE
+
+
+    logger.info("Loading dataset from file ...")
+    @st.experimental_memo(ttl=600)
+    def read_file(filename):
+        with fs.open(filename) as f:
+            return f.read().decode("utf-8")
+
+    # st.dataframe(df)
     # logger.info("Loading dataset from file ...")
     # @st.experimental_singleton
     # def load_data(path):
@@ -161,7 +199,7 @@ def main():
         st.markdown("The altair chart shows the average price of properties in each areas. We can see that the most expensive properties are in the area of Nord.")
 
         st.altair_chart(alt.Chart(xx).mark_circle().encode(
-            x='code_departement',
+            x=alt.X('code_departement', title='Region', axis=alt.Axis(labelAngle=0)),
             y='valeur_fonciere',
             size='valeur_fonciere',
             tooltip=['code_departement', 'valeur_fonciere'],
@@ -314,10 +352,27 @@ def main():
 
         return option, option1, option2
 
+    logger.info("Loading and pre_processing data...")
+    st.experimental_memo()
     def Pre_processing(op):
 
         # Get Directory of the data
-        # path = f'./Data/full_{op[0]}.csv'
+        # content = read_file(f"mystreamlit/Data/file{op[0]}.csv")
+        if op[0] == '2016':
+            df = df2016
+        elif op[0] == '2017':
+            df = df2017
+        elif op[0] == '2018':
+            df = df2018
+        elif op[0] == '2019':
+            df = df2019
+        elif op[0] == '2020':
+            df = df2020
+        # df = StringIO(content)
+        # df = pd.read_csv(content)
+        # df = df.sample(frac=.1, random_state=1).copy()
+        # df['code_departement'] = pd.to_numeric(df['code_departement'], errors='coerce', downcast='integer')
+        # path = f'./Data/file{op[0]}.csv'
 
         # LOAD DATA
         raw_data = df #load_data(path)

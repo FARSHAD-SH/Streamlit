@@ -7,4 +7,4 @@ altair==4.2.0
 plotly==5.10.0
 pydeck==0.7.1
 loguru==0.6.0
-io==0.3.1
+io
