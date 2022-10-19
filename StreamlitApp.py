@@ -22,6 +22,11 @@ from io import StringIO
 # `anon=False` means not anonymous, i.e. it uses access keys to pull data.
 fs = s3fs.S3FileSystem(anon=False)
 
+
+####################
+##### LoadData #####
+####################
+
 # Retrieve file contents.
 # Uses st.experimental_memo to only rerun when the query changes or after 10 min.
 logger.info("Loading dataset from file ...")
@@ -45,58 +50,9 @@ df2019 = pd.read_csv(content2019)
 content2020 = read_file("mystreamlit/Data/file2020.csv")
 content2020 = StringIO(content2020)
 df2020 = pd.read_csv(content2020)
-# content = read_file("mystreamlit/Data/file2017.csv")
-# content = read_file("mystreamlit/Data/file2018.csv")
-# content = read_file("mystreamlit/Data/file2019.csv")
-# content = read_file("mystreamlit/Data/file2020.csv")
 
-# content = StringIO(content)
-# df2016 = pd.read_csv(content)
-# df['code_departement'] = pd.to_numeric(df['code_departement'], errors='coerce', downcast='integer')
-# df[type(df['code_departement'])=='float64'] = df['code_departement'].astype('int')
-# st.dataframe(df)
-# df1=df['code_departement']
-# df2 = df1[df1.apply(lambda x: isinstance(x, float))]
-# df3 = df1[df1.apply(lambda x: isinstance(x, int))]
-# df4 = df1[df1.apply(lambda x: isinstance(x, str))]
-
-# # df1=df1.astype('int')
-
-# st.write(df2.shape)
-# st.write(df3.shape)
-# st.write(df4.shape)
-# path = f'./Data/file{op[0]}.csv'
 
 def main():
-
-    ####################
-    ##### LoadData #####
-    ####################
-
-    # LOAD DATA ONCE
-
-
-    logger.info("Loading dataset from file ...")
-    @st.experimental_memo(ttl=600)
-    def read_file(filename):
-        with fs.open(filename) as f:
-            return f.read().decode("utf-8")
-
-    # st.dataframe(df)
-    # logger.info("Loading dataset from file ...")
-    # @st.experimental_singleton
-    # def load_data(path):
-    #     raw_data = pd.read_csv(
-    #         path,
-    #         usecols=[
-    #                 "id_mutation", "date_mutation",
-    #                 "valeur_fonciere", "type_local",
-    #                 "code_departement", "surface_terrain",
-    #                 "latitude", "longitude"
-    #                 ], low_memory=False) # onlread these columns
-    #     sample_raw_data = raw_data.sample(frac=.1, random_state=1).copy()  # sample 20% of data
-    #     return sample_raw_data
-
 
     ####################
     ## Pre-Processing ##
@@ -315,7 +271,6 @@ def main():
                         " and publish it with streamlit share. The dataset is available on the [data.gouv.fr](https://www.data.gouv.fr/fr/datasets/demandes-de-valeurs-foncieres/) website."
                         " The dataset contains the requests for properties value in France. The dataset is updated every month. The dataset contains 1.5 million rows and 17 columns."
                         " The dataset is available from 2016 to 2020 and available in CSV format.")
-            # st.markdown("You can find the source code in the []()")
 
     #################
     ### SELECTION ###
@@ -357,7 +312,6 @@ def main():
     def Pre_processing(op):
 
         # Get Directory of the data
-        # content = read_file(f"mystreamlit/Data/file{op[0]}.csv")
         if op[0] == '2016':
             df = df2016
         elif op[0] == '2017':
@@ -368,11 +322,6 @@ def main():
             df = df2019
         elif op[0] == '2020':
             df = df2020
-        # df = StringIO(content)
-        # df = pd.read_csv(content)
-        # df = df.sample(frac=.1, random_state=1).copy()
-        # df['code_departement'] = pd.to_numeric(df['code_departement'], errors='coerce', downcast='integer')
-        # path = f'./Data/file{op[0]}.csv'
 
         # LOAD DATA
         raw_data = df #load_data(path)
